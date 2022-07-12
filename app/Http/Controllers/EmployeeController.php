@@ -39,14 +39,11 @@ class EmployeeController extends Controller
      */
     public function store(StoreEmployeeRequest $request)
     {
-        dd($request->collect());
-        $employee=new Employee();
-        $employee->name=$request->input('name');
-        $employee->email=$request->input('email');
-        $employee->password=Hash::make($request->input('password'));
-        $employee->address=$request->input('address');
-        $employee->phone=$request->input('phone');
-        $employee->save();
+
+        $data = $request->validated();
+        $data['password'] = Hash::make($request->input('password'));
+
+        Employee::insert($data);
 
         return redirect()->route('employees.index');
     }
