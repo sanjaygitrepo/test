@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -15,7 +16,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        return response()->json(['message'=>'users list','users'=>User::all()],200);
     }
 
     /**
@@ -26,7 +27,13 @@ class UserController extends Controller
      */
     public function store(StoreUserRequest $request)
     {
-        //
+        
+        $data = $request->validated();
+        $data['password'] = Hash::make($request->password);
+
+        User::insert($data);
+
+        return response()->json(['message'=>'register successfully'],200);
     }
 
     /**
@@ -37,7 +44,8 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        //
+        return response()->json(['user'=>$user],200);
+        
     }
 
     /**
@@ -60,6 +68,8 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        //
+        $user->delete();
+        return response()->json(['message'=>'User deleted successfully'],200);
+
     }
 }
