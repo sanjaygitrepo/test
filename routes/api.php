@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -25,6 +26,9 @@ Route::apiResource('/users',UserController::class)
             return response()->json(['error'=>'user not found'],404);
             
         });
+
+Route::post('posts/create',[PostController::class,'create']);        
+Route::get('posts',[PostController::class,'index']);        
 
 Route::fallback(function() {
             return response()->json(['error'=>'Invalid route'],404);
