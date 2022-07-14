@@ -3,6 +3,7 @@
 use App\Http\Controllers\EmployeeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\TaskAddController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -24,6 +25,11 @@ Route::resource('employees', EmployeeController::class)
         ->missing(function (Request $request) {
             return Redirect::route('employees.index');
         });
+
+
+Route::post('/addData',[TaskAddController::class,'addTask'])->name('addData'); 
+
+Route::get('/report-form',[TaskAddController::class,'create']);        
 
 Route::fallback(function() {
     return Redirect::route('employees.index');
