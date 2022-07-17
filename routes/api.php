@@ -20,6 +20,7 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // });
 
+Route::post('users/login',[UserController::class,'login']);
 Route::apiResource('/users',UserController::class)
         ->missing(function (Request $request) {
 

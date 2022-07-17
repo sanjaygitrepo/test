@@ -6,9 +6,12 @@ use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
-
+use Illuminate\Http\Request;
+use App\Traits\ThrottlesAttempts;
+use Auth;
 class UserController extends Controller
 {
+    use ThrottlesAttempts;
     /**
      * Display a listing of the resource.
      *
@@ -31,7 +34,7 @@ class UserController extends Controller
         $data = $request->validated();
         $data['password'] = Hash::make($request->password);
 
-        User::insert($data);
+        User::create($data);
 
         return response()->json(['message'=>'register successfully'],200);
     }
@@ -71,5 +74,32 @@ class UserController extends Controller
         $user->delete();
         return response()->json(['message'=>'User deleted successfully'],200);
 
+    }
+
+    public function login(Request $request)
+    {
+          if($this->hasTooManyAttempts($request))
+                {
+                    return $this->sendLockoutResponse($request);
+                }
+                $credentials=['email'=>$request->email,'password'=>$request->password];
+                if (!Auth::attempt($credentials)) {
+                    $this->incrementAttempts($request);
+
+                    return response()->json([
+                        'status_code' => 401,
+                        'message' => 'Unauthorized'
+                    ]);
+                }
+                //auth attempt good
+                $user=User::where('email',$request->email)->first();
+                $this->clearAttempts($request);
+
+                return response()->json([
+                        'status_code' => 200,
+                        'user' => $user
+                    ],200);
+
+                //w.e else you do
     }
 }

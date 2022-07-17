@@ -46,6 +46,8 @@ class NotifyUser extends Notification implements ShouldQueue
                     ->line('posted By : Modesta Ondricka')
                     ->line('Post Name : '.$this->post->title)
                     ->line('Description : '.$this->post->body);
+
+                    // return (new MailMessage)->view('mail.notification.permission', ['key' => $value])->subject('Send me html'); returning view email pages code
     }
 
     /**
